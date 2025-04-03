@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="https://api.tianditu.gov.cn/api?v=4.0&tk=cd9bd9d2482dcb3c0888295414b43145"></script>
+</head>
+
+<body>
+    <div id="mapBox" style="width: 500px;height: 500px;"></div>
+    <script>
+        // window.onload = function () {
+            let map = new T.Map("mapBox");
+
+            map.centerAndZoom(new T.LngLat(114.34715, 30.57597), 16);
+    
+            const searchService = new T.LocalSearch(map,{pageCapacity:10,onSearchComplete:(e)=>{
+                console.log(e,'searchService')
+            }})
+   
+            searchService.search("人信汇",1)
+            // 在地图上显示当前位置的图标
+            var icon = new T.Icon({
+                iconUrl: "./weizhi.jpeg",
+                iconSize: new T.Point(20, 35),
+                iconAnchor: new T.Point(12, 41),
+            });
+            marker = new T.Marker(new T.LngLat(lng, lat), {
+                icon: icon,
+            });
+            map.addOverLay(marker);
+            // 将地图中心点移动到当前位置
+            map.panTo(new T.LngLat(lng, lat));
+            // 显示当前位置的详细地址
+            getAddress(lng, lat);
+            // }
+            // 点击地图获取位置
+            map.addEventListener("click", function (e) {
+                var lnglat = e.lnglat;
+                var lng = lnglat.lng;
+                var lat = lnglat.lat;
+                // 移除之前的图标
+                map.removeOverLay(marker);
+                showDiv();
+                resulthideDiv();
+                // 在点击位置显示图标
+                var icon = new T.Icon({
+                    iconUrl: "./weizhi.jpeg",
+                    iconSize: new T.Point(20, 35),
+                    iconAnchor: new T.Point(12, 41),
+                });
+                marker = new T.Marker(new T.LngLat(lng, lat), {
+                    icon: icon,
+                });
+                map.addOverLay(marker);
+                // 将地图中心点移动到点击位置
+                map.panTo(new T.LngLat(lng, lat));
+                // 显示点击位置的详细地址
+                getAddress(lng, lat);
+            });
+
+            var config = {
+                pageCapacity: 10, //每页显示的数量
+                onSearchComplete: localSearchResult, //接收数据的回调函数
+            };
+            //创建搜索对象
+            localsearch = new T.LocalSearch(map, config);
+        // }
+    </script>
+</body>
+
+</html>
